@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" type="text/css" href="style.css">
+		<title>Rational Fraction Visualization</title>
+		<script src="validateform.js"></script>
+		<script src="visualizing.js"></script>
+		<script src="prime.js"></script>
+		<script src="long_division.js"></script>
+		<script src="http://d3js.org/d3.v3.min.js"></script>
+		<script type="text/javascript"></script>
+    <script src="js/bootstrap.min.js"></script>
+		<script src="http://code.jquery.com/jquery.js"></script>
+
+		<script type="text/javascript">
+		function onSubmit() {
+		var valid_input = validateForm();
+		if(valid_input==1) {
+			var numer = parseInt(document.getElementById('num_input').value);
+	  	var denom = parseInt(document.getElementById('denom_input').value);
+	  	var mod = parseInt(document.getElementById('mod_input').value);
+
+
+
+			var remainder_info = long_division(numer,denom,mod);
+			min = findMin();
+			svg_container.selectAll("*").remove();
+			var remainder_list = createPathList(remainder_info[1], min);
+			drawLines(remainder_info,remainder_list[0],remainder_list[1],svg_container);
+
+			var denom_elt = document.getElementById("denom_fact");
+			denom_elt.innerHTML = "Prime Factors: " + prime_factors(denom) + "<br> Prime: " + is_prime(denom) + "<br> Happy Number: " + is_happy(denom);
+			var numer_elt = document.getElementById("numer_fact")
+			numer_elt.innerHTML = "Prime Factors: " + prime_factors(numer) + "<br> Prime: " + is_prime(numer)+ "<br> Happy Number: " + is_happy(numer);
+;
+			var mod_elt = document.getElementById("mod_fact")
+			mod_elt.innerHTML = "Prime Factors: " + prime_factors(mod) + "<br> Prime: " + is_prime(mod)+ "<br> Happy Number: " + is_happy(mod);
+;
+			
+			if(remainder_info[0] == 1){
+				var frac_type = document.getElementById("frac_type");
+				// frac_type.innerHTML = "Hello";
+			}
+			if(remainder_info[0] == 2){
+				var frac_type = document.getElementById("frac_type");
+				// frac_type.innerHTML = "Hello";
+			}
+			if(remainder_info[0] == 3){
+				var frac_type = document.getElementById("frac_type");
+				// frac_type.innerHTML = "Hello";
+			}
+			}
+		}
+		</script>
+		<script>
+		function changeSize(){
+		min = findMin();
+		svg_container.attr("width",min)
+							.attr("height",min);
+		}
+		</script>
+
+		<script>
+		function findMin(){
+		min = document.documentElement.clientWidth - 370;
+  	var height = document.documentElement.clientHeight;
+		if(height-90 < min) {
+			min = height-90;
+		}
+		return min;
+		}
+		</script>
+
+		<script>
+		function example1(){
+			document.getElementById('num_input').value = '1';
+			document.getElementById('denom_input').value = '101';
+			document.getElementById('mod_input').value = '103';
+			onSubmit();
+		}
+		</script>
+
+		<script>
+		function example2(){
+			document.getElementById('num_input').value = '42';
+			document.getElementById('denom_input').value = '4242';
+			document.getElementById('mod_input').value = '424242';
+			onSubmit();
+		}
+		</script>
+
+		<script>
+		function example3(){
+			document.getElementById('num_input').value = '2';
+			document.getElementById('denom_input').value = '109';
+			document.getElementById('mod_input').value = '399';
+			onSubmit();
+		}
+		</script>
+
+	</head>
+	<body>
+		<center><h2>Rational Fraction Visualization</h2></center>
+
+
+		<script>
+		var svg_container = d3.select("body").append("svg")
+																				.attr("width",600)
+																				.attr("height",600)
+		var min;
+		changeSize();
+		window.addEventListener('resize', changeSize);
+
+		</script>
+
+		<div id="container">
+			<div id="menu">
+					<p>Numerator: <input type="int" name="numer" onkeyup="onSubmit()"
+					id="num_input" placeholder="numerator"><br>
+					Denominator: <input type="int" name="denom" onkeyup="onSubmit()"
+					id="denom_input" placeholder="denominator"><br>
+					Base/modulus: <input type="int" name="mod" onkeyup="onSubmit()"
+					id="mod_input" placeholder="modulus"><br></p>
+				</div>
+					<div>
+						<br>
+					<input type="radio" id="mod10" name="color" value="mod10"
+						checked="checked" onclick="onSubmit()">  Mod-10 color
+					<input type="radio" id="random" name="color" value="random"
+					onclick="onSubmit()">  Random
+					<input type="radio" id="mono" name="color" value="mono"
+					onclick="onSubmit()">  Black
+			</div>
+			<div id="info">
+				<p>
+					<br>
+					<b> Interesting Facts</b>
+					<br>
+					<u> Numerator</u>
+					<div id="numer_fact"></div>
+					<br>
+					<u> Denominator </u>
+					<div id="denom_fact">
+					</div>
+					<br>
+					<u> Modulus </u>
+					<div id="mod_fact">
+					</div>
+				</p>
+			</div>
+			<div id="links"
+			<p>
+				<b> Some examples</b>
+				<br>
+				<a id="myLink" href="#" onclick="example1();return false;">Example 1: 1/101, Base 103</a>
+				<br>
+				<a id="myLink" href="#" onclick="example2();return false;">Example 2: 42/4242, Base 424242</a>
+				<br>
+				<a id="myLink" href="#" onclick="example3();return false;">Example 3: 2/109, Base 399</a>
+				</div>
+			</p>
+		</div>
+		<div>
+			<br>
+			<br>
+			<div id="frac_type"> </div>
+		</div>
+	</body>
+</html>
